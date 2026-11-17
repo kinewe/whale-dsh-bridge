@@ -8,7 +8,7 @@
 - DSH 侧边栏提供「鲸鱼娘桥接」面板，管理状态、权限、工作区、任务和接入。
 
 > **这不是官方发行版，也不是鲸鱼娘 fork。**  
-> 这里保存的是桥接层和适配脚本，鲸鱼娘本体请从上游获取。
+> 这里保存的是桥接层和适配脚本。鲸鱼娘本体（上游）：https://github.com/Banan1cee/whale_girl
 
 ---
 
@@ -188,6 +188,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install-dsh-plugin.ps1 `
 - 仓库不包含 API Key、Cookie、微信数据库；配置请放在本机，不要提交。
 
 ---
+
+## 上游仓库
+
+鲸鱼娘本体：**https://github.com/Banan1cee/whale_girl**
+
+本仓库不包含鲸鱼娘源码，只包含桥接层、DSH 插件和适配说明。安装前请先从上游获取并确认鲸鱼娘能独立运行。
 
 ## 上游与许可
 
