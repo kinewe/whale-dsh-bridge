@@ -1,0 +1,40 @@
+{
+  "name": "dsh-whale-bridge",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "鲸鱼娘聊天壳 × DeepSeek Harness 桥接：聊天里的功能调用交给 DSH agent 执行，文件通道（出站下载 / 网页上传），并在 DSH 侧边栏管理权限 / 模式 / 工作区。",
+  "keywords": ["dsh", "dsh-plugin", "deepseek-harness", "whale-girl", "bridge"],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib",
+    "whale-side",
+    "locale",
+    "icon.svg",
+    "cordis.patch.yml",
+    "README.md",
+    "CONTRACT.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  },
+  "license": "MIT"
+}

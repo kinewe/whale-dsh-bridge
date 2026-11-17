@@ -1,0 +1,28 @@
+# 本机配置与凭据
+config.json
+settings.json
+persona.md
+*.local.json
+.env
+.env.*
+
+# 运行时/日志
+*.log
+data/
+scratch/
+*.pid
+
+# 备份/生成物
+*.bak
+*.bak.*
+*.pyc
+__pycache__/
+*.zip
+dist/
+node_modules/
+
+# 编辑器/系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

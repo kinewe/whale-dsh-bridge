@@ -1,0 +1,36 @@
+{
+  "whale_dir": "C:\\软件\\whale_girl\\whale-girl",
+  "created_at": "2026-11-04T16:38:05",
+  "files": [
+    {
+      "path": "server.js",
+      "sha256": "7871dafb106af49544fde0a2b2fdc7cb756de8914090a4003b8c7a24eeb97ac1",
+      "purpose": "鲸鱼娘 HTTP/桥接状态/媒体清理/人设热重载补丁"
+    },
+    {
+      "path": "src/bot.js",
+      "sha256": "d1830c52d76f44c03bdac0832e4420576b856f12ac63ae9ad159c83b40566ac6",
+      "purpose": "按 aliases 动态识别名字（followup/engaged）"
+    },
+    {
+      "path": "src/persona.js",
+      "sha256": "33f29e6598a13fa9c4ba3933832ecc19c3168cee5dc385aba016276f2fc0c092",
+      "purpose": "customOnly 完全自定义人设分支"
+    },
+    {
+      "path": "src/personaStore.js",
+      "sha256": "74e76e1b19860183512ccac765161c8f504cd8d8e956d81eaa459bc943fea3c3",
+      "purpose": "customOnly 存档读写"
+    },
+    {
+      "path": "src/config.js",
+      "sha256": "7a8835b2072ab1ad97a9493fcb3382d3559453db7f3c1e03fd8214c78fc222e1",
+      "purpose": "customOnly 默认值"
+    },
+    {
+      "path": "web/persona.html",
+      "sha256": "5c58d2767e03038bb9b980f1096f30d57731f75f5cc521d755416b1fc78df047",
+      "purpose": "人设页完全替换开关"
+    }
+  ]
+}

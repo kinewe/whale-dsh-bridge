@@ -1,0 +1,14 @@
+# dsh-whale-bridge bundle patch
+# 插入一个 profile 级 Host 插件行：它负责桥接 HTTP 服务、DSH 任务执行与鲸鱼娘配置适配。
+# 客户端半侧由 package.json 的 dsh.client 声明，dsh-client-modules 在说明符恰为包名
+# 的这一行 Loader 上挂载浏览器模块。
+# 默认路径只是示例；安装后请在插件面板改成你的鲸鱼娘目录和 DSH 工作区。
+- insert:
+    - id: dsh-whale-bridge
+      name: dsh-whale-bridge
+      config:
+        port: 8789
+        workspace: 'C:\dsh_workspace'
+        whaleDir: 'C:\whale-girl'
+        permission: workspace-write
+        mode: standard
