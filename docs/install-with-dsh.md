@@ -3,6 +3,14 @@
 这个仓库是给 **DeepSeek Harness（DSH）agent** 读的。  
 人类只需要把仓库交给 DSH，并说清楚目标。
 
+## 先准备鲸鱼娘
+
+鲸鱼娘本体不在这个仓库里，请先从上游获取：
+
+**https://github.com/Banan1cee/whale_girl**
+
+确认它能独立启动、网页聊天能回，再来装 DSH 桥接。
+
 ## 推荐方式
 
 ### 1. 把仓库拿到本机
