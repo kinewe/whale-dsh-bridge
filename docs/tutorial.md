@@ -36,6 +36,7 @@ whale-dsh-share-20261117/
 
 > 适用：Windows 10/11 + DSH 桌面端 + 鲸鱼娘（whale-girl）+ 微信 4.x  
 > 本机已验证版本：DSH `0.2.2-rc.3`、鲸鱼娘 `3.60`、`dsh-whale-bridge 0.2.0`  
+> 鲸鱼娘上游：https://github.com/Banan1cee/whale_girl  
 > 目标：**聊天还在鲸鱼娘里，需要动手时交给 DSH agent 执行，结果回到聊天。**
 
 ---
