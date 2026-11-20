@@ -81,9 +81,12 @@ DSH 会话 / 任务 / 工具
 
 ## 人设与记忆边界
 
+> **⚠️ 最重要的边界：鲸鱼娘长期记忆不会自动进入 DSH。**  
+> 切到 `brain=dsh` 后，DSH 只看到自己 session 的历史；鲸鱼娘以前记住的偏好、约定、项目历史仍在鲸鱼娘数据里，不会自动带过去，也不会自动回写。迁移前必须手动导出/总结/注入。
+
 - **人设**：`personaFile`（默认 `%USERPROFILE%\.dsh\whale-bridge\persona.md`）只在新建 DSH 会话时注入；已有会话不会自动更新，需要发「新会话 / reset」。
 - **DSH 记忆**：每个聊天 `chatKey → DSH session`；上下文由 DSH session 自己持久化，群聊/私聊分开。
-- **鲸鱼娘记忆**：和 DSH session 是两套，目前**不会自动互相同步**。
+- **鲸鱼娘长期记忆**：和 DSH session 是两套，目前**不会自动互相同步**。
 - **反向记忆**：DSH 不会自动把聊天总结成鲸鱼娘 memory，也不会写回 `store.json`。
 - 面板「清空该会话记忆」清的是鲸鱼娘侧记忆，不是 DSH session。
 
