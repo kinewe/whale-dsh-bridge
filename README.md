@@ -92,6 +92,9 @@ DSH 会话 / 任务 / 工具
 
 完整说明见 [docs/persona-memory.md](docs/persona-memory.md)。
 
+> **仓库没有实现长期记忆同步；如果你需要，可以按文档里的扩展方案自己补。**  
+> 不要直接改鲸鱼娘 `store.json`，建议从插件侧加独立 memory 文件和新会话注入。
+
 ---
 
 ## 目录
