@@ -354,6 +354,20 @@ DSH 把产物写到 <工作区>\.whale-bridge\outbox\
 
 完整说明见 [docs/persona-memory.md](persona-memory.md)。
 
+> **仓库没有实现长期记忆同步；如果你需要，可以按文档里的扩展方案自己补。**
+
+### 5.7 如果你想自己补长期记忆
+
+推荐从插件侧做，不要直接改鲸鱼娘 `store.json`：
+
+1. 在 `%USERPROFILE%\.dsh\whale-bridge\memory\` 下按 `chatKey` 存独立记忆文件；
+2. 每 N 轮或任务结束后，让 DSH 提炼事实/偏好/约定/未完成项；
+3. 新 DSH 会话时，把摘要作为 `【长期记忆】` 注入 prompt；
+4. 做去重、更新、长度控制和隐私过滤；
+5. 可选：通过鲸鱼娘导出/适配层回写，但保持原文件可回滚。
+
+参考位置：`lib/llm-proxy.js` 的 `completeDshChat` 和 `lib/persona.js`。
+
 ## 6. 常用配置
 
 插件设置文件：
