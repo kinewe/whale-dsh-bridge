@@ -10,29 +10,29 @@
 > 适合：愿意看日志、按步骤改配置的技术型网友，或直接交给 DSH 执行。
 > 不适合：期待双击安装、完全不想碰路径和命令的人。
 
-## 分享包结构
+## 仓库结构
 
 ```text
-whale-dsh-share-20261117/
-├─ README-先看这个.md
+whale-dsh-bridge/
+├─ README.md                 项目介绍
+├─ AGENTS.md                 DSH 安装/适配执行规则
 ├─ docs/
-│  └─ 鲸鱼娘接入DSH教程-分享版.md   ← 本文件
-├─ plugin/
-│  └─ dsh-whale-bridge/             ← DSH 插件源码（不含 .bak 备份）
-├─ whale-bridge/
-│  ├─ wechatauto_bridge.py          ← 参考：老版本微信桥接修改
-│  └─ bridge_modules/               ← 参考：Win32 发送、B站、验证等模块
-└─ whale-side/                      ← 从插件目录复制的鲸鱼娘补丁脚本
+│  ├─ tutorial.md            本教程
+│  ├─ install-with-dsh.md    给 DSH 的安装任务说明
+│  └─ versions.md            版本与兼容性
+├─ plugin/dsh-whale-bridge/  DSH 插件源码
+├─ bridge-reference/         老版本微信桥接参考（不要直接覆盖）
+└─ scripts/                  辅助脚本
 ```
 
 ## 先读这段
+
 1. 先确认你的 DSH 和鲸鱼娘都能独立运行；
 2. 再安装插件、打补丁、接桥接；
-3. **不要**把 `whale-bridge/` 直接覆盖到新版鲸鱼娘；
+3. **不要**把 `bridge-reference/` 直接覆盖到新版鲸鱼娘；
 4. 出问题先看日志，不要连续重启/重复启动多个桥接。
 
----
-# 把鲸鱼娘接入 DeepSeek Harness（DSH）教程
+
 
 > 适用：Windows 10/11 + DSH 桌面端 + 鲸鱼娘（whale-girl）+ 微信 4.x  
 > 本机已验证版本：DSH `0.2.2-rc.3`、鲸鱼娘 `3.60`、`dsh-whale-bridge 0.2.0`  
