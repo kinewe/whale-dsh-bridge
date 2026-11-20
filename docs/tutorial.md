@@ -341,6 +341,15 @@ DSH 把产物写到 <工作区>\.whale-bridge\outbox\
 
 ---
 
+## 5.6 人设与记忆边界
+
+- 人设只在**新建 DSH 会话**时注入；已有会话改人设不生效，要发「新会话 / reset」；
+- DSH 自己保存每个聊天的 session 历史，这是 DSH 侧记忆；
+- 鲸鱼娘自己的记忆和 DSH session **不会自动同步**；
+- DSH 不会自动生成长期记忆，也不会写回鲸鱼娘 `store.json`。
+
+完整说明见 [docs/persona-memory.md](persona-memory.md)。
+
 ## 6. 常用配置
 
 插件设置文件：
