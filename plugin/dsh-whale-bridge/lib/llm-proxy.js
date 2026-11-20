@@ -734,6 +734,8 @@ export class LlmProxy {
     const candidates = [
       process.env.WHALE_PDFTOOLS_BIN,
       workspace ? path.join(workspace, '.whale-bridge', 'tools', 'poppler', 'Library', 'bin') : '',
+      'C:\\Dev_dsh\\scratch\\pdf-tools\\poppler\\poppler-26.09.0\\Library\\bin',
+      'C:\\Users\\71420\\AppData\\Local\\hermes\\tools\\git-2.53.0+3-win32-x64\\mingw64\\bin',
     ].filter(Boolean)
     for (const dir of candidates) {
       const t = path.join(dir, 'pdftotext.exe')
@@ -1131,6 +1133,21 @@ export class LlmProxy {
         }
       : undefined
     let result
+    let progress = { toolCalls: 0, toolName: '' }
+    let progressTimer
+    if (streamEnabled && typeof this._postWhaleStatus === 'function') {
+      // 长任务不能让人干等：45 秒后每 30 秒往聊天状态流里报一次进度。
+      progressTimer = setInterval(() => {
+        try {
+          const sec = Math.round((Date.now() - started) / 1000)
+          if (sec < 45) return
+          const tool = progress.toolName ? '，正在用「' + progress.toolName + '」' : ''
+          const line = '还在处理，已经 ' + sec + ' 秒' + tool + '，工具调用 ' + (progress.toolCalls || 0) + ' 次。'
+          Promise.resolve(this._postWhaleStatus(settings, chatKey, line)).catch(() => {})
+        } catch { /* 进度播报失败不影响任务 */ }
+      }, 30000)
+      if (progressTimer.unref) progressTimer.unref()
+    }
     try {
       result = await this.runner.runTask({
         prompt,
@@ -1141,9 +1158,12 @@ export class LlmProxy {
         timeoutMs: Math.max(60000, Math.min(1800000, Number(settings.timeoutMs) || 600000)),
         signal,
         onText,
+        onProgress: (p) => { progress = { ...progress, ...(p || {}) } },
       })
     } catch (err) {
       return { error: 'DSH 会话失败：' + String(err && err.message ? err.message : err) }
+    } finally {
+      if (progressTimer) clearInterval(progressTimer)
     }
     this.log(
       '[brain] dsh chat ' + (result.ok ? 'ok' : 'fail') + ' ' + (Date.now() - started)
