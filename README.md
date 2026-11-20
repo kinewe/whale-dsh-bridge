@@ -84,9 +84,12 @@ DSH 会话 / 任务 / 工具
 ## 目录
 
 ```text
+AGENTS.md                  DSH 安装/适配执行规则
 plugin/dsh-whale-bridge/   DSH 插件源码（安装入口）
 bridge-reference/          参考：老版本微信桥接修改（不直接覆盖）
 docs/tutorial.md           完整安装/配置/验证/排障教程
+docs/install-with-dsh.md   给 DSH 的安装任务说明
+docs/versions.md           版本与兼容性
 scripts/                   辅助脚本
 ```
 
