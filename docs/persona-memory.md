@@ -170,6 +170,17 @@ DSH session 自己的历史
 
 这些都需要额外开发，不能靠改一个配置开关完成。
 
+> **这个仓库没有实现长期记忆同步；但你可以自己补。**
+> 推荐从插件侧扩展，不要直接改鲸鱼娘 `store.json`：
+>
+> - 记忆存储：`%USERPROFILE%\.dsh\whale-bridge\memory\<chatKey>.md` 或 `memory.json`；
+> - 生成：每 N 轮/任务结束后让 DSH 提炼事实、偏好、约定、未完成事项；
+> - 注入：新 DSH 会话时把摘要追加到 `【长期记忆】`；
+> - 合并：去重、更新旧条目、控制长度、过滤隐私；
+> - 可选：通过鲸鱼娘导出/适配层回写，但保持原文件可回滚。
+>
+> 参考实现位置：`lib/llm-proxy.js` 的 `completeDshChat`（人设/记忆注入点）和 `lib/persona.js`（文件读写模式）。
+
 ### `brain=upstream` 的差异
 
 `brain=upstream` 时：
