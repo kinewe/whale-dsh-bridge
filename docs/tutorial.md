@@ -343,10 +343,14 @@ DSH 把产物写到 <工作区>\.whale-bridge\outbox\
 
 ## 5.6 人设与记忆边界
 
+> **⚠️ 重点：长期鲸鱼娘记忆不会自动进入 DSH。**  
+> 切到 `brain=dsh` 后，DSH 只看到自己 session 的历史；鲸鱼娘长期记住的偏好、约定、项目历史不会自动带过去，也不会自动回写。迁移前要手动导出/总结/注入。
+
 - 人设只在**新建 DSH 会话**时注入；已有会话改人设不生效，要发「新会话 / reset」；
 - DSH 自己保存每个聊天的 session 历史，这是 DSH 侧记忆；
 - 鲸鱼娘自己的记忆和 DSH session **不会自动同步**；
-- DSH 不会自动生成长期记忆，也不会写回鲸鱼娘 `store.json`。
+- DSH 不会自动生成长期记忆，也不会写回鲸鱼娘 `store.json`；
+- 不要假设“鲸鱼娘记得 = DSH 记得”。
 
 完整说明见 [docs/persona-memory.md](persona-memory.md)。
 
