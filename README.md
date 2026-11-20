@@ -79,6 +79,16 @@ DSH 会话 / 任务 / 工具
 
 **结论：核心「鲸鱼娘 ↔ DSH」链路可以复现；微信自动化、文件、B 站等扩展是参考实现，取决于版本和环境，不能保证 100% 复刻。**
 
+## 人设与记忆边界
+
+- **人设**：`personaFile`（默认 `%USERPROFILE%\.dsh\whale-bridge\persona.md`）只在新建 DSH 会话时注入；已有会话不会自动更新，需要发「新会话 / reset」。
+- **DSH 记忆**：每个聊天 `chatKey → DSH session`；上下文由 DSH session 自己持久化，群聊/私聊分开。
+- **鲸鱼娘记忆**：和 DSH session 是两套，目前**不会自动互相同步**。
+- **反向记忆**：DSH 不会自动把聊天总结成鲸鱼娘 memory，也不会写回 `store.json`。
+- 面板「清空该会话记忆」清的是鲸鱼娘侧记忆，不是 DSH session。
+
+完整说明见 [docs/persona-memory.md](docs/persona-memory.md)。
+
 ---
 
 ## 目录
@@ -90,6 +100,7 @@ bridge-reference/          参考：老版本微信桥接修改（不直接覆�
 docs/tutorial.md           完整安装/配置/验证/排障教程
 docs/install-with-dsh.md   给 DSH 的安装任务说明
 docs/versions.md           版本与兼容性
+docs/persona-memory.md     人设与记忆边界
 scripts/                   辅助脚本
 ```
 
