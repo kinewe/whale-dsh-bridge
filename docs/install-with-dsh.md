@@ -3,6 +3,9 @@
 这个仓库是给 **DeepSeek Harness（DSH）agent** 读的。  
 人类只需要把仓库交给 DSH，并说清楚目标。
 
+> **⚠️ 记忆提醒：鲸鱼娘长期记忆不会自动进入 DSH。**  
+> `brain=dsh` 只使用 DSH session 自己的历史；鲸鱼娘以前记住的偏好/约定/项目历史不会自动迁移。迁移前先读 [docs/persona-memory.md](persona-memory.md)，不要向用户承诺“记忆已同步”。
+
 ## 先明确模式
 
 当前参考部署使用 **`brain=dsh`**：
