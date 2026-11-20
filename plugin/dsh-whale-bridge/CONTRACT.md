@@ -1,5 +1,9 @@
 # CONTRACT —— dsh-whale-bridge 桥接契约（v0.1）
 
+> **历史开发说明：本契约以 `brain=upstream` 旧模式为主要示例。**
+> 当前参考部署使用 `brain=dsh`：聊天回复也由 DSH 会话生成。
+> 以仓库根目录 `README.md` 和 `docs/tutorial.md` 为准。
+
 > 本文件是「鲸鱼娘壳 × DeepSeek Harness（DSH）」集成项目中所有实现者共同遵守的契约。
 > 改动契约必须先改本文件；实现与验证都以本文件为准。
 
