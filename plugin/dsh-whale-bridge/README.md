@@ -1,5 +1,10 @@
 # dsh-whale-bridge —— 鲸鱼娘聊天壳 × DeepSeek Harness 桥接
 
+> **注意：本文件是插件开发历史说明，部分章节以 `brain=upstream` 旧模式为例。**
+>
+> 当前参考部署使用 **`brain=dsh`**：聊天回复本身也由 DSH 会话生成，不只是“需要动手时”才走 DSH。
+> 以仓库根目录 `README.md` 和 `docs/tutorial.md` 为准。
+
 把「鲸鱼娘」这个**聊天壳**接到 **DeepSeek Harness（DSH）** 上：
 
 - **聊天照旧**：人设、网页/微信聊天、记忆、表情包、B 站/热搜、语音、看图，全在鲸鱼娘里。
