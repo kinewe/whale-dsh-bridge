@@ -24,6 +24,7 @@
 2. `docs/versions.md`
 3. `docs/tutorial.md`（重点：第 3、4、7、13、14 节）
 4. `docs/install-with-dsh.md`
+5. `docs/persona-memory.md`（人设/记忆边界，改配置前必读）
 
 ## 执行前必须检查
 
