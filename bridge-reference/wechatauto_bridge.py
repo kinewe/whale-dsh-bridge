@@ -848,6 +848,27 @@ def ensure_ffmpeg_env():
 
 def main():
     boot("进入 main()")
+    _startup = {"done": False}
+
+    def _startup_watchdog():
+        try:
+            timeout = float(os.environ.get("WHALE_BRIDGE_STARTUP_TIMEOUT", "180"))
+        except Exception:
+            timeout = 180.0
+        deadline = time.time() + max(30.0, timeout)
+        while time.time() < deadline:
+            if _startup.get("done"):
+                return
+            time.sleep(2)
+        try:
+            log("[!] 启动超过 %.0f 秒仍未就绪，强制退出，避免半死进程占端口" % max(30.0, timeout))
+            with open(os.path.join(ROOT, "data", "bridge-startup-timeout.log"), "a", encoding="utf-8") as _f:
+                _f.write(time.strftime("%Y-%m-%d %H:%M:%S") + " startup timeout\n")
+        except Exception:
+            pass
+        os._exit(4)
+
+    threading.Thread(target=_startup_watchdog, name="bridge-startup-watchdog", daemon=True).start()
     # 给网页「设置 → 微信账号」下拉用：只扫账号、不连消息，跑完就退出。
     # 必须放在单实例锁之前 —— 否则桥接正跑着的时候，这条命令会以为自己"重复启动"直接退出。
     if "--list-accounts" in sys.argv:
@@ -3741,17 +3762,25 @@ def main():
             if _quoted_context:
                 _orig_path = ""
                 if _quoted_file_title:
-                    try:
-                        _outbox = os.path.join(dsh_bridge_workspace(), ".whale-bridge", "outbox")
-                        for _fn in os.listdir(_outbox):
-                            if _quoted_file_title in _fn or _fn in _quoted_file_title:
-                                _orig_path = os.path.join(_outbox, _fn)
-                                break
-                    except Exception:
-                        _orig_path = ""
+                    # 先找 DSH 产物 outbox（自己发出去的文件）
+                    for _dir in (
+                        os.path.join(dsh_bridge_workspace(), ".whale-bridge", "outbox"),
+                        # 再找微信入站文件缓存（群友引用别人发过的 PDF/文档）
+                        os.path.join(ROOT, "data", "wechat-files"),
+                    ):
+                        try:
+                            for _fn in os.listdir(_dir):
+                                if _quoted_file_title in _fn or _fn in _quoted_file_title:
+                                    _orig_path = os.path.join(_dir, _fn)
+                                    break
+                        except Exception:
+                            pass
+                        if _orig_path:
+                            break
                 if _quoted_file_title:
-                    content = ("（对方引用了聊天里出现过的文件《%s》，这是引用卡片，不是新附件。"
+                    content = ("（对方引用了聊天里出现过的文件《%s》。这是引用卡片；"
                                "引用发送者：%s；对方自己的话/评论：%s。"
+                               "如果下面给出了原文件本地路径，请直接读它；"
                                "请结合上下文自行判断是不是新任务：只是评论就自然接话；"
                                "只有明确要求修改/重做/查看时才处理，不要默认重做，也不要要求重发。）"
                                % (_quoted_file_title, _quoted_sender_name or "未知",
@@ -5367,6 +5396,7 @@ def main():
     try:
         import json as _json, datetime as _dt
         import shutil as _shutil2
+        _startup["done"] = True
         with open(os.path.join(ROOT, "data", "bridge-ready.json"), "w", encoding="utf-8") as _rf:
             _json.dump({
                 "readyAt": _dt.datetime.now().isoformat(timespec="seconds"),
