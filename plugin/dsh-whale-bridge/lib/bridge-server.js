@@ -5,7 +5,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import http from 'node:http'
-import { spawn } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 import { PACKAGE_ROOT, PACKAGE_VERSION, appendLog } from './config.js'
 import { dshVersion } from './dsh-task.js'
 import { progressLine } from './progress-line.js'
@@ -105,6 +105,53 @@ export function createBridgeServer({ store, runner, whale, proxy, files, log = a
     return gw && gw.bridge ? gw.bridge : null
   }
 
+  function bridgeReadyAlive(settings) {
+    try {
+      const readyPath = path.join(String(settings.whaleDir || ''), 'data', 'bridge-ready.json')
+      if (!fs.existsSync(readyPath)) return false
+      const ready = JSON.parse(fs.readFileSync(readyPath, 'utf8'))
+      const pid = Number(ready && ready.pid)
+      if (!Number.isInteger(pid) || pid <= 0) return false
+      process.kill(pid, 0)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  function waitMs(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
+  async function cleanupStaleBridge(logs) {
+    // 只清理桥接相关进程，不动 DSH / 鲸鱼娘 / 微信进程。
+    const script = [
+      "$targets = Get-CimInstance Win32_Process | Where-Object {",
+      "  ($_.Name -eq 'python.exe' -and $_.CommandLine -match 'wechatauto_bridge') -or",
+      "  ($_.Name -eq 'cmd.exe' -and $_.CommandLine -match 'bridge_loop|启动微信桥接')",
+      "};",
+      "$killed = @();",
+      "foreach ($p in $targets) { try { Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue; $killed += $p.ProcessId } catch {} };",
+      "if ($killed.Count -gt 0) { $killed -join ',' } else { '' }",
+    ].join('\n')
+    try {
+      const r = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', script], {
+        windowsHide: true, timeout: 20000, encoding: 'utf8',
+      })
+      const out = String(r.stdout || '').trim()
+      if (out) {
+        logs.push('bridge: killed stale process(es): ' + out)
+        log('[chain] killed stale bridge pid=' + out)
+      } else {
+        logs.push('bridge: no stale process found')
+      }
+      return out
+    } catch (err) {
+      logs.push('bridge: stale cleanup failed: ' + String(err && err.message ? err.message : err))
+      return ''
+    }
+  }
+
   async function chainSnapshot(whaleStatus) {
     const whaleRunning = Boolean(whaleStatus && whaleStatus.running)
     let bridge = null
@@ -127,12 +174,14 @@ export function createBridgeServer({ store, runner, whale, proxy, files, log = a
         wechat = { online: false, error: String(err && err.message ? err.message : err) }
       }
     }
+    const lastSeen = wechat && Number(wechat.lastSeenSec)
+    const heartbeatFresh = Number.isFinite(lastSeen) && lastSeen >= 0 && lastSeen <= 45
     return {
       plugin: true,
       whale: { running: whaleRunning, pid: whaleStatus ? whaleStatus.pid : null },
-      bridge: { online: Boolean(wechat && wechat.online) },
+      bridge: { online: Boolean(wechat && wechat.online && heartbeatFresh) },
       wechat,
-      online: Boolean(whaleRunning && wechat && wechat.online && wechat.accountOk !== false),
+      online: Boolean(whaleRunning && wechat && wechat.online && heartbeatFresh && wechat.accountOk !== false),
     }
   }
 
@@ -198,7 +247,23 @@ export function createBridgeServer({ store, runner, whale, proxy, files, log = a
       const ensured = await whale.ensureRunning({ timeoutMs: 120000 })
       logs.push('whale: ' + (ensured.running ? 'running' : 'failed') + (ensured.started ? ' (started)' : ''))
       let chain = await chainSnapshot({ running: ensured.running, webPort: chainPort(settings) })
+      // 心跳可能滞后：ready 文件里的 pid 已经死了，就不要相信“在线”。
+      if (chain.bridge.online && !bridgeReadyAlive(settings)) {
+        logs.push('bridge: heartbeat says online but ready pid is dead')
+        chain.bridge.online = false
+      }
       if (!chain.bridge.online) {
+        // 先给已有桥接 5 秒心跳机会，避免误杀正在启动的正常实例。
+        await waitMs(5000)
+        chain = await chainSnapshot({ running: ensured.running, webPort: chainPort(settings) })
+        if (chain.bridge.online && !bridgeReadyAlive(settings)) {
+          logs.push('bridge: heartbeat still online but ready pid is dead after wait')
+          chain.bridge.online = false
+        }
+      }
+      if (!chain.bridge.online) {
+        await cleanupStaleBridge(logs)
+        await waitMs(1500)
         const bat = path.join(settings.whaleDir, '启动微信桥接.bat')
         if (!fs.existsSync(bat)) {
           return sendJson(res, 500, { ok: false, error: '找不到启动微信桥接.bat：' + bat, logs, chain })
